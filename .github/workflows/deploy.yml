@@ -1,0 +1,22 @@
+name: Deploy to EC2
+on:
+    push:
+          branches:
+                  - main  # Trigger on pushes to the main branch
+
+          jobs:
+              deploy:
+                    runs-on: ubuntu-latest
+                          steps:
+                                  - name: Checkout code
+                                            uses: actions/checkout@v3
+
+                                                    - name: Deploy to EC2
+                                                              uses: appleboy/ssh-action@master
+                                                                        with:
+                                                                                    host: ${{ secrets.EC2_HOST }}  # EC2 public IP or DNS
+                                                                                                username: ubuntu                # EC2 username
+                                                                                                            key: ${{ secrets.EC2_SSH_KEY }} # Private SSH key
+                                                                                                                        script: |
+                                                                                                                                      cd /root/git-repo         # Path to your repository on EC2
+                                                                                                                                                  git pull origin main          # Pull the latest code
